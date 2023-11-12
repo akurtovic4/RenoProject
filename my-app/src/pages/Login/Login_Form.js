@@ -2,26 +2,26 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Login = (props) => {
-    const [email, setEmail] = useState("")
+    const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
-    const [emailError, setEmailError] = useState("")
+    const [usernameError, setUsernameError] = useState("")
     const [passwordError, setPasswordError] = useState("")
     
     const navigate = useNavigate();
         
     const onButtonClick = () => {
        // Set initial error values to empty
-       setEmailError("")
+       setUsernameError("")
        setPasswordError("")
 
        // Check if the user has entered both fields correctly
-       if ("" === email) {
-           setEmailError("Please enter your email")
+       if ("" === username) {
+           setUsernameError("Please enter your username")
            return
        }
 
-       if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
-           setEmailError("Please enter a valid email")
+       if (!/^(?=.{1,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/.test(username)) {
+           setUsernameError("Please enter a valid username")
            return
        }
 
@@ -35,8 +35,54 @@ const Login = (props) => {
            return
        }
 
-       // Authentication calls will be made here...  
+        // Check if username has an account associated with it
+        checkAccountExists(accountExists => {
+            // If yes, log in 
+            if (accountExists)
+                logIn()
+            else
+            if (window.confirm("An account does not exist with this username: " + username + ". Do you want to create a new account?")) {
+                logIn()
+            }  
+            })
     }
+
+   // Call the server API to check if the given username ID already exists
+   const checkAccountExists = (callback) => {
+    fetch("http://localhost:3080/check-account", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+          },
+        body: JSON.stringify({username})
+    })
+    .then(r => r.json())
+    .then(r => {
+        callback(r?.userExists)
+    })
+}
+
+// Log in a user using username and password
+const logIn = () => {
+    fetch("http://localhost:3080/auth", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+          },
+        body: JSON.stringify({username, password})
+    })
+    .then(r => r.json())
+    .then(r => {
+        if ('success' === r.message) {
+            localStorage.setItem("user", JSON.stringify({username, token: r.token}))
+            props.setLoggedIn(true)
+            props.setUsername(username)
+            navigate("/")
+        } else {
+            window.alert("Wrong username or password")
+        }
+    })
+} 
 
     return <div className={"mainContainer"}>
         <div className={"titleContainer"}>
@@ -45,16 +91,17 @@ const Login = (props) => {
         <br />
         <div className={"inputContainer"}>
             <input
-                value={email}
-                placeholder="Enter your email here"
-                onChange={ev => setEmail(ev.target.value)}
+                value={username}
+                placeholder="Enter your username here"
+                onChange={ev => setUsername(ev.target.value)}
                 className={"inputBox"} />
-            <label className="errorLabel">{emailError}</label>
+            <label className="errorLabel">{usernameError}</label>
         </div>
         <br />
         <div className={"inputContainer"}>
             <input
                 value={password}
+                type="password"
                 placeholder="Enter your password here"
                 onChange={ev => setPassword(ev.target.value)}
                 className={"inputBox"} />

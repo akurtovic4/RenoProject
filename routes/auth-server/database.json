@@ -1,0 +1,23 @@
+{
+  "users": [
+    {
+      "email": "aminapeder@nekimail.com",
+      "password": "$2b$10$55l7ebdbifGynnnPdmXMguZy/OBsyorAWiUi6oSkTuteQwcmN3Ojq"
+    },
+    {
+      "password": "$2b$10$7gXVQagvFvfN0ASR1h3Zg.mX5ErzFxuazhB1J9KOGdNc0ut9RxzJ6"
+    },
+    {
+      "username": "admin",
+      "password": "$2b$10$gzh7BYKa4OoVVwDC5vL/heMxbOIHBcPz3e4WEBn95vCUw8nC1rKuq"
+    },
+    {
+      "username": "superadmin",
+      "password": "$2b$10$kwPeunoE6uT2OtqNDAr9CO5FRdTnvAIdb8pbCCVnQRJ54IK4cBbkq"
+    },
+    {
+      "username": "amina",
+      "password": "$2b$10$FKn6BuvYs/TyXMDsDecMgeIKGInCCaBi4ZgnRLxjazK2Ufkrwt/Lq"
+    }
+  ]
+}

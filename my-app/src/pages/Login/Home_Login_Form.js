@@ -2,11 +2,16 @@ import React from "react"
 import { useNavigate } from "react-router-dom";
 
 const Home = (props) => {
-    const { loggedIn, email } = props
+    const { loggedIn, username } = props
     const navigate = useNavigate();
     
     const onButtonClick = () => {
-        // You'll update this function later
+        if (loggedIn) {
+            localStorage.removeItem("user")
+            props.setLoggedIn(false)
+        } else {
+            navigate("/login")
+        }
     }
 
     return <div className="mainContainer">
@@ -23,7 +28,7 @@ const Home = (props) => {
                 onClick={onButtonClick}
                 value={loggedIn ? "Log out" : "Log in"} />
             {(loggedIn ? <div>
-                Your email address is {email}
+                Your username is {username}
             </div> : <div/>)}
         </div>
 
